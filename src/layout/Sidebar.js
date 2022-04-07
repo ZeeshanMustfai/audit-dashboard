@@ -5,39 +5,12 @@ import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import ListItem from "@mui/material/ListItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-import Login from "../components/registeration/Login";
-import Applogo from "../assets/images/app-logo.jpeg";
-import { sidebarTabsList } from "../utills/constant";
-import { useLocation, useNavigate } from "react-router-dom";
 import { Typography } from "@mui/material";
+import NavItem from "./NavItem";
+import "./sidebar.scss";
 const drawerWidth = 240;
-
-const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
-  ({ theme, open }) => ({
-    flexGrow: 1,
-    padding: theme.spacing(3),
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: `-${drawerWidth}px`,
-    ...(open && {
-      transition: theme.transitions.create("margin", {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      marginLeft: 0,
-    }),
-  })
-);
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -56,107 +29,100 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  padding: theme.spacing(0, 1),
-  ...theme.mixins.toolbar,
-  justifyContent: "flex-end",
-}));
+export default function Sidebar({ children }, props) {
+  const { window } = props;
+  const [childData, setChildData] = useState("");
+  const [mobileOpen, setMobileOpen] = React.useState(false);
 
-export default function Sidebar({ children }) {
-  const [open, setOpen] = React.useState(true);
-  const [activeTab, setActiveTab] = useState("");
-  const location = useLocation();
-  const navigate = useNavigate();
-  const handleDrawerOpen = () => {
-    setOpen(!open);
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
   };
 
-  useEffect(() => {
-    highlightActiveTab();
-  }, []);
-
-  const highlightActiveTab = () => {
-    let pathname = location.pathname.split("/");
-    let activeTab = pathname[pathname.length - 1];
-    if (activeTab) {
-      setActiveTab(activeTab);
-    }
-  };
-
-  const onTabHandler = (e, tab) => {
-    e.preventDefault();
-    let tabKey = tab.key.toLowerCase();
-    console.log("tabkey", tabKey);
-    if (tabKey !== activeTab) {
-      if (tabKey === "login") {
-        navigate("/login");
-      }
-      if (tabKey === "dashboard") {
-        navigate("/dashboard");
-      } else {
-        navigate(`/${tabKey}`);
-      }
-      setActiveTab(tabKey);
-    } else {
-      navigate(`/${tabKey}`);
-    }
-  };
+  const container =
+    window !== undefined ? () => window().document.body : undefined;
 
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar
+        position="fixed"
+        sx={{
+          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          ml: { sm: `${drawerWidth}px` },
+        }}
+      >
         <Toolbar>
           <IconButton
+            color="inherit"
             aria-label="open drawer"
-            onClick={handleDrawerOpen}
             edge="start"
-            sx={{ mr: 2, color: "#fff" }}
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, color: "#fff", display: { sm: "none" } }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" color={"#fff"} textTransform="capitalize">
-            {activeTab}
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{
+              textTransform: "capitalize",
+              color: "#fff",
+            }}
+          >
+            {childData}
           </Typography>
         </Toolbar>
       </AppBar>
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: drawerWidth,
-            boxSizing: "border-box",
-          },
-        }}
-        variant="persistent"
-        anchor="left"
-        open={open}
+      <Box
+        component="nav"
+        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+        aria-label="mailbox folders"
       >
-        <List>
-          <ListItemIcon className="app-logo">
-            <img src={Applogo} alt="app-logo" width={"70%"} />
-          </ListItemIcon>
-          {sidebarTabsList.map((menu, index) => (
-            <ListItem
-              button
-              key={menu.key}
-              onClick={(e) => onTabHandler(e, menu)}
-            >
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={menu.text} />
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-      <Main open={open}>
-        <DrawerHeader />
+        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+        <Drawer
+          container={container}
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+          sx={{
+            display: { xs: "block", sm: "none" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+            },
+          }}
+        >
+          <NavItem passChild={setChildData} />
+        </Drawer>
+        <Drawer
+          variant="permanent"
+          sx={{
+            display: { xs: "none", sm: "block" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+            },
+          }}
+          open
+        >
+          <NavItem passChild={setChildData} />
+        </Drawer>
+      </Box>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          width: { sm: `calc(100% - ${drawerWidth}px)` },
+        }}
+      >
+        <Toolbar />
         {children}
-      </Main>
+      </Box>
     </Box>
   );
 }

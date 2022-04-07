@@ -23,7 +23,7 @@ ChartJS.register(
 );
 const Dashboard = () => {
   return (
-    <Grid container spacing={3}>
+    <Grid container width={"100%"} rowGap={2}>
       <Grid item xs={12} md={12}>
         <Paper elevation={3} sx={{ padding: "15px" }}>
           <Typography variant="h6" fontWeight={700}>
