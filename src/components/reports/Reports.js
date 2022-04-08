@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import TableContainer from "../reactTable/TableContainer";
 import { TextField, Box, Avatar, InputAdornment } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import { useTheme } from "@mui/styles";
+import BasicModal from "../modals";
 
 const Reports = () => {
   const theme = useTheme();
+  const [openRepModal, setRepModal] = useState(false);
+
   const columns = React.useMemo(
     () => [
       {
@@ -91,12 +94,19 @@ const Reports = () => {
         <Avatar
           variant="rounded"
           sx={{ background: theme.palette.secondary.main, cursor: "pointer" }}
+          onClick={() => setRepModal(true)}
         >
           <AddIcon />
         </Avatar>
       </Box>
       <CssBaseline />
       <TableContainer columns={columns} data={data} />
+      {openRepModal && (
+        <BasicModal
+          handleClose={() => setRepModal(false)}
+          title={"Reports Modal"}
+        />
+      )}
     </div>
   );
 };

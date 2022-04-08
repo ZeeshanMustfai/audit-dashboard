@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import TableContainer from "../reactTable/TableContainer";
 import { TextField, Box, Avatar, InputAdornment } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import { useTheme } from "@mui/styles";
+import BasicModal from "../modals";
 
 const Documents = () => {
   const theme = useTheme();
+  const [openDocModal, setDocModal] = useState(false);
   const columns = React.useMemo(
     () => [
       {
@@ -84,12 +86,19 @@ const Documents = () => {
         <Avatar
           variant="rounded"
           sx={{ background: theme.palette.secondary.main, cursor: "pointer" }}
+          onClick={() => setDocModal(true)}
         >
           <AddIcon />
         </Avatar>
       </Box>
       <CssBaseline />
       <TableContainer columns={columns} data={data} />
+      {openDocModal && (
+        <BasicModal
+          handleClose={() => setDocModal(false)}
+          title={"Documents Modal"}
+        />
+      )}
     </div>
   );
 };

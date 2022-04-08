@@ -36,3 +36,5 @@ export const sidebarTabsList = [
     icon: SettingsOutlinedIcon,
   },
 ];
+
+export const drawerWidth = 240;

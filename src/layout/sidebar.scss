@@ -1,11 +1,13 @@
+@import "../assets/sass/variables.scss";
+
 .sidebar-tab-text {
   text-transform: capitalize;
-  color: #4caf50 !important;
+  color: $primary !important;
 }
 
 .active-tab {
   width: auto !important;
-  background-color: #4caf50 !important;
+  background-color: $primary !important;
   color: white !important;
   text-transform: capitalize;
 }
@@ -16,5 +18,5 @@
 
 .white_icon {
   filter: brightness(0) invert(1);
-  color: #fff !important;
+  color: $white !important;
 }

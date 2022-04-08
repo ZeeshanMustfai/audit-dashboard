@@ -1,0 +1,7 @@
+$primary: #4caf50;
+$secondary: #ffa500;
+$white: #fff;
+
+@mixin border($value) {
+  border-radius: $value !important;
+}

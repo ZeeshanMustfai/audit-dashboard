@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import TableContainer from "../reactTable/TableContainer";
 import {
@@ -15,8 +15,10 @@ import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import { useTheme } from "@mui/styles";
 import History from "./History";
+import BasicModal from "../modals";
 
 const Requests = () => {
+  const [openReqModal, setReqModal] = useState(false);
   const theme = useTheme();
   const columns = React.useMemo(
     () => [
@@ -111,6 +113,7 @@ const Requests = () => {
                 background: theme.palette.secondary.main,
                 cursor: "pointer",
               }}
+              onClick={() => setReqModal(true)}
             >
               <AddIcon />
             </Avatar>
@@ -118,10 +121,13 @@ const Requests = () => {
           <CssBaseline />
           <TableContainer columns={columns} data={data} />
         </Grid>
-        {/* <Grid item xs={12} md={4}>
-          <History />
-        </Grid> */}
       </Grid>
+      {openReqModal && (
+        <BasicModal
+          handleClose={() => setReqModal(false)}
+          title={"Requests Modal"}
+        />
+      )}
     </>
   );
 };
